@@ -882,12 +882,15 @@ export CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER="X_CHROMA_TOKEN"
 
 #### Client Setup
 
+Using the default `Authorization: Bearer <token>` header:
+
 ```python
 import chromadb
 from chromadb.config import Settings
 
 client = chromadb.HttpClient(
     settings=Settings(chroma_client_auth_provider="chromadb.auth.token.TokenAuthClientProvider",
+                      chroma_client_auth_token_transport_header="AUTHORIZATION",
                       chroma_client_auth_credentials="test-token"))
 client.heartbeat()  # this should work with or without authentication - it is a public endpoint
 
@@ -895,6 +898,25 @@ client.get_version()  # this should work with or without authentication - it is 
 
 client.list_collections()  # this is a protected endpoint and requires authentication
 ```
+
+Using custom Chroma auth token `X-Chroma-Token: <token>` header:
+
+```python
+import chromadb
+from chromadb.config import Settings
+
+client = chromadb.HttpClient(
+    settings=Settings(chroma_client_auth_provider="chromadb.auth.token.TokenAuthClientProvider",
+                      chroma_client_auth_token_transport_header="X_CHROMA_TOKEN",
+                      chroma_client_auth_credentials="test-token"))
+client.heartbeat()  # this should work with or without authentication - it is a public endpoint
+
+client.get_version()  # this should work with or without authentication - it is a public endpoint
+
+client.list_collections()  # this is a protected endpoint and requires authentication
+```
+
+
 
 </TabItem>
 <TabItem value="js" label="JavaScript">
